@@ -1,31 +1,61 @@
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React from "react";
+import type { MessageType, TrainType } from "@/lib/types";
+import { useMessagesStore } from "@/lib/store";
+import { useSocket } from "@/components/socket-provider";
 
-const items = [1, 2, 3, 4, 5];
-export default function Trains() {
+export default function Trains({ trains }: { trains: TrainType[] }) {
   return (
     <div className="bg-muted p-2 rounded-lg shadow-sm">
-      {items.map((_, idx) => (
-        <Train />
+      {trains.map((train) => (
+        <Train train={train} key={train.train_id} />
       ))}
     </div>
   );
 }
 
-function Train() {
+function Train({ train }: { train: TrainType }) {
+  const { addMessage } = useMessagesStore();
+  const { socket } = useSocket();
+
   return (
-    <div className="w-full p-2 gap-1 grid grid-cols-[2fr_1.5fr_0.5fr] hover:rounded-lg hover:bg-secondary/80 cursor-pointer border-b">
-      <div className="">
-        <p className="font-medium text-secondary-foreground">SFG DDN EXPRESS</p>
-        <p className="text-sm text-muted-foreground">14113</p>
+    <div
+      className="w-full p-2 space-y-3 hover:rounded-lg hover:bg-secondary/80 cursor-pointer border-b"
+      onKeyUp={() => console.log("key up")}
+      onClick={() => {
+        const message: MessageType = {
+          text: train.train_id,
+          type: "text",
+          sender: "user",
+        };
+        addMessage(message);
+        socket.emit("message", message);
+      }}
+    >
+      <div className="gap-1 grid grid-cols-[2fr_1fr] ">
+        <div>
+          <p className="font-medium text-secondary-foreground">
+            {train.train_name}
+          </p>
+          <p className="text-sm text-muted-foreground">{train.train_id}</p>
+        </div>
+        <div>
+          <p className="text-secondary-foreground">
+            {train.departure_time} – {train.arrival_time}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {train.departure_station} - {train.arrival_station}
+          </p>
+        </div>
       </div>
-      <div className="">
-        <p className="text-secondary-foreground">5:30 PM – 8:00 PM</p>
-        <p className="text-sm text-muted-foreground">PUN - BMB</p>
-      </div>
-      <div className="">
-        <p className="text-muted-foreground">2.5 hr</p>
-        {/* <p className="text-sm text-muted-foreground">Round Trip</p> */}
+      <div className="w-full grid grid-cols-2">
+        {train.classes.map((cls) => (
+          <div key={cls.class_type}>
+            <p className="text-muted-foreground">{cls.class_type}</p>
+            <p className="text-primary">₹{cls.fare}</p>
+            <p className="text-sm text-muted-foreground">
+              {cls.seats_available} seats left
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

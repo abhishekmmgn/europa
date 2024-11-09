@@ -4,7 +4,7 @@ import { IoArrowForward } from "react-icons/io5";
 
 export default function Home() {
   return (
-    <main className="px-4 sm:px-0 max-w-xl mx-auto">
+    <main className="px-4 sm:px-0 max-w-2xl mx-auto">
       <section className="text-center text-sm text-muted-foreground mt-10 max-w-md mx-auto">
         This is an open source project. You can contribute to this project by
         adding more agents. Integrate your own APIs and make it more powerful.
@@ -34,7 +34,7 @@ function Suggestion({ text, href }: { text: string; href: string }) {
   return (
     <Link
       to={href}
-      className="w-full max-w-xl flex justify-between items-center text-muted-foreground text-sm rounded-lg px-4 py-2 bg-secondary hover:bg-secondary/80 cursor-pointer"
+      className="w-full max-w-2xl flex justify-between items-center text-muted-foreground text-sm rounded-lg px-4 py-2 bg-secondary hover:bg-secondary/80 cursor-pointer"
     >
       <p>{text}</p>
       <IoArrowForward className="h-5 w-5" />

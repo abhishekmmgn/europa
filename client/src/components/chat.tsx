@@ -3,6 +3,7 @@ import Trains from "@/components/agents/train-booking/trains";
 import { useEffect } from "react";
 import { useMessagesStore } from "@/lib/store";
 import { useSocket } from "@/components/socket-provider";
+import type { TrainType } from "@/lib/types";
 
 export default function Chat() {
   const { messages, addMessage } = useMessagesStore();
@@ -10,16 +11,14 @@ export default function Chat() {
 
   useEffect(() => {
     function onMessageRecieved(message: {
-      text: string;
-      list: any;
+      response: string;
+      train_list?: TrainType[];
       type: "text" | "train_list";
     }) {
-      // change the shape of the data
-      const { text, list, type } = message;
-      alert("hello");
+      const { response, train_list, type } = message;
       addMessage({
-        text,
-        trains: list,
+        text: response,
+        trains: train_list,
         type,
         sender: "ai",
       });
@@ -37,15 +36,15 @@ export default function Chat() {
       {messages.map((msg) =>
         msg.sender === "user" ? (
           <Message
-            key={msg.text.slice(0, 5)}
+            key={msg.text?.slice(0, 5)}
             sender="user"
             message={msg.text}
           />
         ) : (
-          <AIMessageWrapper key={msg.text.slice(0, 5)}>
+          <AIMessageWrapper key={msg.text?.slice(0, 5)}>
             <Message sender="ai" message={msg.text} />
             {msg.type === "train_list" && msg.trains && (
-              <Trains items={msg.trains} />
+              <Trains trains={msg.trains} />
             )}
           </AIMessageWrapper>
         )

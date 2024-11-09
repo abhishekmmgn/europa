@@ -45,7 +45,7 @@ export default function MultimodalInput() {
   };
   const listening = false;
   return (
-    <div className="px-4 bg-background grid place-items-center fixed bottom-0 inset-x-0 pt-4 pb-5 sm:inset-x-auto sm:w-full sm:max-w-xl sm:px-0">
+    <div className="px-4 bg-background grid place-items-center fixed bottom-0 inset-x-0 pt-4 pb-5 sm:inset-x-auto sm:w-full sm:max-w-2xl sm:px-0">
       <Textarea
         placeholder="Type your message..."
         className="bg-muted resize-none"

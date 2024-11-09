@@ -5,4 +5,4 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const server = import.meta.env.VITE_SERVER_DOMAIN as string;
+export const server = "localhost:3000";

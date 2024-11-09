@@ -13,7 +13,7 @@ export default function Message({
         sender === "user" && "justify-end slide-up"
       }`}
     >
-      <p className="max-w-[80%] break-all">{message}</p>
+      <p className="max-w-[80%] break-words">{message}</p>
     </div>
   );
 }
