@@ -1,5 +1,6 @@
 import MultimodalInput from "@/components/multimodal-input";
 import { Link } from "react-router-dom";
+import { IoArrowForward } from "react-icons/io5";
 
 export default function Home() {
   return (
@@ -33,9 +34,10 @@ function Suggestion({ text, href }: { text: string; href: string }) {
   return (
     <Link
       to={href}
-      className="w-full max-w-xl text-muted-foreground text-sm rounded-lg px-4 py-2 bg-secondary hover:bg-secondary/80 cursor-pointer"
+      className="w-full max-w-xl flex justify-between items-center text-muted-foreground text-sm rounded-lg px-4 py-2 bg-secondary hover:bg-secondary/80 cursor-pointer"
     >
       <p>{text}</p>
+      <IoArrowForward className="h-5 w-5" />
     </Link>
   );
 }

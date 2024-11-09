@@ -1,15 +1,20 @@
-import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import React from "react";
 
-type Props = {
-  id: string;
-};
-
-export default function Train({ id }: Props) {
+const items = [1, 2, 3, 4, 5];
+export default function Trains() {
   return (
-    <Label
-      className="w-full p-2 gap-1 grid grid-cols-[2fr_1.5fr_0.5fr]"
-      htmlFor={id}
-    >
+    <div className="bg-muted p-2 rounded-lg shadow-sm">
+      {items.map((_, idx) => (
+        <Train />
+      ))}
+    </div>
+  );
+}
+
+function Train() {
+  return (
+    <div className="w-full p-2 gap-1 grid grid-cols-[2fr_1.5fr_0.5fr] hover:rounded-lg hover:bg-secondary/80 cursor-pointer border-b">
       <div className="">
         <p className="font-medium text-secondary-foreground">SFG DDN EXPRESS</p>
         <p className="text-sm text-muted-foreground">14113</p>
@@ -22,6 +27,6 @@ export default function Train({ id }: Props) {
         <p className="text-muted-foreground">2.5 hr</p>
         {/* <p className="text-sm text-muted-foreground">Round Trip</p> */}
       </div>
-    </Label>
+    </div>
   );
 }

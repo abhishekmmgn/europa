@@ -1,53 +1,55 @@
 import Message, { AIMessageWrapper } from "@/components/message";
-import SuperRadioGroup from "../components/super/super-radio-group";
-import { io } from "socket.io-client";
-import { socket } from "@/socket";
-import React, { useState, useEffect } from "react";
+import Trains from "@/components/agents/train-booking/trains";
+import { useEffect } from "react";
+import { useMessagesStore } from "@/lib/store";
+import { useSocket } from "@/components/socket-provider";
 
-export default function Chat({ id }: { id: string }) {
-  // if (id !== "train-booking" && id !== "pnr-status" && id !== "food-ordering") {
-  //   notFound();
-  // }
-
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [fooEvents, setFooEvents] = useState([]);
+export default function Chat() {
+  const { messages, addMessage } = useMessagesStore();
+  const { socket } = useSocket();
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-      alert("connected");
+    function onMessageRecieved(message: {
+      text: string;
+      list: any;
+      type: "text" | "train_list";
+    }) {
+      // change the shape of the data
+      const { text, list, type } = message;
+      alert("hello");
+      addMessage({
+        text,
+        trains: list,
+        type,
+        sender: "ai",
+      });
     }
-
-    function onDisconnect() {
-      setIsConnected(false);
-      alert("disconnected");
-    }
-
-    function onFooEvent(value) {
-      setFooEvents((previous) => [...previous, value]);
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("foo", onFooEvent);
+    socket.on("message", onMessageRecieved);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("foo", onFooEvent);
+      socket.off("message", onMessageRecieved);
     };
   }, []);
 
   console.log(socket);
   return (
     <section className="flex flex-col gap-4">
-      <Message sender="user" message="Help me book a train." />
-      <AIMessageWrapper>
-        <Message sender="ai" message="Here are some trains." />
-        {/* <SuperRadioGroup>
-          <Train />
-        </SuperRadioGroup> */}
-      </AIMessageWrapper>
+      {messages.map((msg) =>
+        msg.sender === "user" ? (
+          <Message
+            key={msg.text.slice(0, 5)}
+            sender="user"
+            message={msg.text}
+          />
+        ) : (
+          <AIMessageWrapper key={msg.text.slice(0, 5)}>
+            <Message sender="ai" message={msg.text} />
+            {msg.type === "train_list" && msg.trains && (
+              <Trains items={msg.trains} />
+            )}
+          </AIMessageWrapper>
+        )
+      )}
     </section>
   );
 }
